@@ -1,9 +1,6 @@
-# MedicalHistoryPhenomeWide
-Here we present the downstream analysis for the paper "Medical history predicts phenome-wide disease onset". 
-
 <div align="center">
 
-⛑ **Medical history predicts phenome-wide disease onset** ⛑
+**Medical history predicts phenome-wide disease onset** ⛑
 
 [comment]: <> (<!--)
 
@@ -12,6 +9,10 @@ Here we present the downstream analysis for the paper "Medical history predicts 
 [comment]: <> (-->)
 
 </div>
+
+# MedicalHistoryPhenomeWide
+Here we present the downstream analysis for the paper "Medical history predicts phenome-wide disease onset". 
+
 
 ## Description   
 Here we present the downstream analysis for the paper "Medical history predicts phenome-wide disease onset". Detailed instructions on the data preprocessing, model training and inference can be found [here](https://github.com/nebw/medhist).
