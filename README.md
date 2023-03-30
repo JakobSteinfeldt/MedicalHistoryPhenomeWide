@@ -2,7 +2,7 @@
   
 [comment]: <> (<!--)
 
-[![PrePrint](https://img.shields.io/badge/Paper-MedRxiv-red)]([https://www.nature.com/articles/s41591-022-01980-3](https://www.medrxiv.org/content/10.1101/2023.03.10.23286918v2))
+[![Paper](https://img.shields.io/badge/Paper-MedRxiv-red)](https://www.medrxiv.org/content/10.1101/2023.03.10.23286918v2)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 [comment]: <> (-->)
