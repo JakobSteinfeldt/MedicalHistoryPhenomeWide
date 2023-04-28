@@ -52,7 +52,7 @@ def load_data():
     figure_path = f"{project_path}/figures"
     output_path = f"{project_path}/data"
 
-    experiment = 220627
+    experiment = 230425
     experiment_path = f"{output_path}/{experiment}"
     pathlib.Path(experiment_path).mkdir(parents=True, exist_ok=True)
     
@@ -64,10 +64,12 @@ def load_data():
 
     endpoints_md = pd.read_csv(f"{experiment_path}/endpoints.csv")
     endpoints = sorted(endpoints_md.endpoint.to_list())
-    scores = [
-        'Age+Sex', 'MedicalHistory', 'Age+Sex+MedicalHistory',
-        "SCORE2", "ASCVD", "QRISK3", 
-        "SCORE2+MedicalHistory", "ASCVD+MedicalHistory", "QRISK3+MedicalHistory"]
+    scores = ['ASCVD', 'ASCVD+MedicalHistory', 'Age+Sex',
+       'Age+Sex+Comorbidities', 'Age+Sex+Comorbidities+MedicalHistory',
+       'Age+Sex+Comorbidities+MedicalHistoryLM', 'Age+Sex+MedicalHistory',
+       'Age+Sex+MedicalHistoryLM', 'Comorbidities', 'MedicalHistory',
+       'MedicalHistoryLM', 'QRISK3', 'QRISK3+MedicalHistory', 'SCORE2',
+       'SCORE2+MedicalHistory']
     
     eligable_eids = pd.read_feather(f"{output_path}/eligable_eids_220627.feather")
     eids_dict = eligable_eids.set_index("endpoint")["eid_list"].to_dict()
@@ -134,7 +136,7 @@ def main(args):
     np.random.seed(iteration)
 
     # prepare setup
-    date = 220627
+    date = 230425
     t_eval = 10
     name = f"benchmark_cindex_{date}_{iteration}"
 

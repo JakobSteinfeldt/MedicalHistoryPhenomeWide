@@ -25,7 +25,7 @@ import ray
 
 def get_score_defs():
 
-    with open(r'/home/steinfej/code/22_medical_records/1_processing/score_definitions.yaml') as file:
+    with open(r'/home/steinfej/code/MedicalHistoryPhenomeWide/2_downstream_processing/score_definitions.yaml') as file:
         score_defs = yaml.full_load(file)
     
     return score_defs
@@ -35,13 +35,21 @@ def get_features(endpoint, score_defs):
         'Identity(Records)+MLP': {
             "MedicalHistory": [endpoint],
             "Age+Sex": score_defs["AgeSex"],
+            "Comorbidities": score_defs["Comorbidities"],
             "SCORE2": score_defs["SCORE2"],
             "ASCVD": score_defs["ASCVD"],
             "QRISK3": score_defs["QRISK3"],
+            "Age+Sex+Comorbidities": score_defs["AgeSex"] + score_defs["Comorbidities"],
             "Age+Sex+MedicalHistory": score_defs["AgeSex"] + [endpoint],
             "SCORE2+MedicalHistory": score_defs["SCORE2"] + [endpoint],
             "ASCVD+MedicalHistory": score_defs["ASCVD"] + [endpoint],
             "QRISK3+MedicalHistory": score_defs["QRISK3"] + [endpoint],
+            "Age+Sex+Comorbidities+MedicalHistory": score_defs["AgeSex"] + score_defs["Comorbidities"] + [endpoint],
+            },
+        'Identity(Records)+Linear': {
+            "MedicalHistoryLM": [endpoint],
+            "Age+Sex+MedicalHistoryLM": score_defs["AgeSex"] + [endpoint],
+            "Age+Sex+Comorbidities+MedicalHistoryLM": score_defs["AgeSex"] + score_defs["Comorbidities"] + [endpoint],
             }
     }
     return features
@@ -54,9 +62,13 @@ def get_train_data(in_path, partition, models, data_outcomes):
         
     return train_data
 
-def fit_cox(data_fit, feature_set, covariates, endpoint, penalizer, step_size=1):
+def fit_cox(data_fit, feature_set, covariates, endpoint, penalizer, step_size=1):   
+    # drop columns with only one value -> doesnt make sense as predictor
+    data_fit = data_fit.select_dtypes(include=['int', 'float']).loc[:, data_fit.select_dtypes(include=['int', 'float']).nunique() > 1]
+    
+    # initialize and fit model
     cph = CoxPHFitter(penalizer=penalizer)
-    cph.fit(data_fit, f"{endpoint}_time", f"{endpoint}_event", step_size=step_size)
+    cph.fit(data_fit, f"{endpoint}_time", f"{endpoint}_event", fit_options={"step_size": step_size})
     return cph
 
 def save_pickle(data, data_path):
@@ -128,11 +140,11 @@ def load_data(partition):
     figure_path = f"{project_path}/figures"
     output_path = f"{project_path}/data"
 
-    experiment = 220627
+    experiment = 230425
     experiment_path = f"{output_path}/{experiment}"
     pathlib.Path(experiment_path).mkdir(parents=True, exist_ok=True)
     
-    in_path = pathlib.Path(f"{output_path}/220627/coxph/input")
+    in_path = pathlib.Path(f"{experiment_path}/coxph/input")
     in_path.mkdir(parents=True, exist_ok=True)
 
     model_path = f"{experiment_path}/coxph/models"
@@ -148,7 +160,7 @@ def load_data(partition):
     eligable_eids = pd.read_feather(f"{output_path}/eligable_eids_220627.feather")
     eids_dict = eligable_eids.set_index("endpoint")["eid_list"].to_dict()
 
-    models = ['Identity(Records)+MLP']
+    models = ['Identity(Records)+MLP', 'Identity(Records)+Linear']
     score_defs = get_score_defs()
 
     data_partition = get_train_data(in_path, partition, models, data_outcomes)
@@ -194,6 +206,7 @@ def fit_endpoint(data_partition, eids_dict, score_defs, endpoint_defs, endpoint,
                         if sz==0.01: 
                             save_pickle(data_endpoint, f"{experiment_path}/coxph/errordata_{endpoint}_{feature_set}_{partition}.p")
                         pass
+                del cph
                         
 def main(args):
 

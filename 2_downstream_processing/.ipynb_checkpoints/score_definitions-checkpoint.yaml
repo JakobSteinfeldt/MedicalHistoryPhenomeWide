@@ -51,3 +51,20 @@ SCORE2:
 - systolic_blood_pressure
 - cholesterol
 - hdl_cholesterol
+Comorbidities:
+- aids
+- leukemia
+- lymphoma
+- solid_tumor
+- diabetes
+- dementia
+- hemiplegia
+- myocardial_infarction
+- heart_failure
+- stroke_tia
+- pad
+- copd
+- peptic_ulcer
+- chronic_liver_disease
+- chronic_kidney_disease
+- connective_tissue_disorder
