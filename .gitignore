@@ -37,3 +37,26 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# UK Biobank and sensitive data files
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.pkl
+*.pickle
+*.rds
+*.RData
+*.dta
+*.sav
+
+# Jupyter notebook checkpoints and outputs
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Data directories
+data/
+raw/
+processed/
+output/
+results/
